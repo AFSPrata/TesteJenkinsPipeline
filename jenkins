@@ -2,9 +2,30 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Hello World') {
             steps {
-                echo 'Hello World'
+                script {
+                    echo 'Hello World'
+                }
+            }
+        }
+
+        stage('Simulate Failure') {
+            steps {
+                script {
+                    // Simulate an error that causes the pipeline to fail
+                    error 'This build intentionally fails!'
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            // This block is executed if any of the stages fail
+            script {
+                echo 'Pipeline failed. Notifying GitHub...'
+                currentBuild.result = 'FAILURE'
             }
         }
     }
